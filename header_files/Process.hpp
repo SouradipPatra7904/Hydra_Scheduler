@@ -1,36 +1,30 @@
 #ifndef PROCESS_HPP
 #define PROCESS_HPP
 
-#include <vector>
 #include <string>
+#include <vector>
 
-enum class ProcessState { NEW, READY, RUNNING, BLOCKED, COMPLETED };
-
-// I/O event is triggered after the process has consumed `cpuPoint` units of CPU time
-// (relative to this process's own execution), then it blocks for `duration` time units.
 struct IOEvent {
-    int cpuPoint;   // CPU time consumed so far when I/O should start
-    int duration;   // how long the I/O takes (wall-clock time units)
+    int startTime;
+    int duration;
 };
 
 class Process {
 public:
     int pid;
-    int arrivalTime;               // when it first appears in the system
-    int burstTime;                 // total CPU burst required (units)
-    int remainingTime;             // remaining CPU time
-    int priority;                  // higher = higher priority
-    int completionTime;            // wall-clock time when completed
-    int firstStartTime;            // first time it ever got CPU (for response time)
-    ProcessState state;
+    int arrivalTime;
+    int burstTime;
+    int priority;
+    int remainingTime;
+    int completionTime;
+    int waitingTime;
+    int turnaroundTime;
+    bool completed;
+    std::vector<IOEvent> ioEvents;
 
-    std::vector<IOEvent> ioEvents; // sorted by cpuPoint ascending
-    int ioIndex;                   // next IOEvent index
-    int cpuConsumed;               // CPU time consumed so far (to trigger IO events)
-    int unblockTime;               // wall-clock time when I/O will finish (if BLOCKED)
-    int totalIODuration;           // sum of all IO durations (for waiting time metric)
+    Process(int id, int at, int bt, int prio = 0);
 
-    Process(int id, int at, int bt, int pr = 0, const std::vector<IOEvent>& io = {});
+    void reset();
 };
 
 #endif
