@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "algorithm": "cpp",
-        "mutex": "cpp"
+        "mutex": "cpp",
+        "qpushbutton": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }
