@@ -14,6 +14,7 @@ set(SOURCES
     src/GanttChart.cpp
     src/GUI_MainWindow.cpp
     src/GUI_GanttView.cpp
+    src/GlobalThemes.cpp
 )
 
 set(HEADERS

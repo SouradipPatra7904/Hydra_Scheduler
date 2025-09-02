@@ -1,136 +1,230 @@
 #include "GUI_MainWindow.hpp"
+#include "Process.hpp"
+#include "Scheduler.hpp"
 #include "GanttChart.hpp"
-#include "GlobalThemes.hpp"
+#include "GUI_GanttView.hpp"
 
+#include <QApplication>
+#include <QActionGroup>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QLabel>
 #include <QHeaderView>
-#include <QMenuBar>
-#include <QApplication>
-#include <QSettings>
+#include <QLabel>
+#include <QMessageBox>
 
-#include <QMenu>
-#include <QMenuBar>
-
-GuiMainWindow::GuiMainWindow(QWidget* parent) : QMainWindow(parent) {
+GuiMainWindow::GuiMainWindow(QWidget* parent)
+    : QMainWindow(parent)
+{
     setupUi();
     buildMenus();
+
+    setMinimumSize(1200, 950);
 }
 
-void GuiMainWindow::buildMenus() {
-    QMenu* view = menuBar()->addMenu("View");
-    actLight = view->addAction("Light Theme");
-    actDark  = view->addAction("Dark Theme");
-    connect(actLight, &QAction::triggered, this, &GuiMainWindow::setLightTheme);
-    connect(actDark,  &QAction::triggered, this, &GuiMainWindow::setDarkTheme);
-}
 
-void GuiMainWindow::setupUi() {
+/* ---------- UI ---------- */
+void GuiMainWindow::setupUi()
+{
     QWidget* central = new QWidget(this);
     QVBoxLayout* mainLayout = new QVBoxLayout(central);
 
-    QHBoxLayout* optsLayout = new QHBoxLayout();
+    // --- Controls Row ---
+    auto* controlsLayout = new QHBoxLayout();
+
     algoBox = new QComboBox();
+    // Match the enum Algorithm exactly
     algoBox->addItems({"FCFS", "SJF", "PRIORITY", "ROUND_ROBIN"});
+    algoBox->setCurrentIndex(0);
 
-    coreBox = new QSpinBox(); coreBox->setRange(1, 16); coreBox->setValue(4);
-    quantumBox = new QSpinBox(); quantumBox->setRange(1, 50); quantumBox->setValue(3);
-    procCountBox = new QSpinBox(); procCountBox->setRange(1, 15); procCountBox->setValue(5);
+    coreBox = new QSpinBox();
+    coreBox->setRange(1, 32);
+    coreBox->setValue(4);
 
-    optsLayout->addWidget(new QLabel("Algorithm:")); optsLayout->addWidget(algoBox);
-    optsLayout->addWidget(new QLabel("Cores:"));     optsLayout->addWidget(coreBox);
-    optsLayout->addWidget(new QLabel("Quantum:"));   optsLayout->addWidget(quantumBox);
-    optsLayout->addWidget(new QLabel("Processes:")); optsLayout->addWidget(procCountBox);
+    quantumBox = new QSpinBox();
+    quantumBox->setRange(1, 1000);
+    quantumBox->setValue(3);
 
+    procCountBox = new QSpinBox();
+    procCountBox->setRange(1, 200);
+    procCountBox->setValue(5);
+
+    startBtn = new QPushButton("Start Simulation");
+    connect(startBtn, &QPushButton::clicked, this, &GuiMainWindow::startSimulation);
+
+    // Add labels for clarity
+    controlsLayout->addWidget(new QLabel("Algorithm:"));
+    controlsLayout->addWidget(algoBox);
+    controlsLayout->addWidget(new QLabel("Cores:"));
+    controlsLayout->addWidget(coreBox);
+    controlsLayout->addWidget(new QLabel("Quantum:"));
+    controlsLayout->addWidget(quantumBox);
+    controlsLayout->addWidget(new QLabel("Processes:"));
+    controlsLayout->addWidget(procCountBox);
+    controlsLayout->addStretch(1);
+    controlsLayout->addWidget(startBtn);
+
+    mainLayout->addLayout(controlsLayout);
+
+    // --- Process Table ---
+    // Use 4 columns: PID, Arrival, Burst, Priority — matches previous working code
     procTable = new QTableWidget(procCountBox->value(), 4);
     procTable->setObjectName("ProcTable");
     procTable->setHorizontalHeaderLabels({"PID", "Arrival", "Burst", "Priority"});
     procTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     loadDefaultRows(procCountBox->value());
+
     connect(procCountBox, &QSpinBox::valueChanged, this, [this](int v){
         procTable->setRowCount(v);
         loadDefaultRows(v);
     });
 
-    startBtn = new QPushButton("Start Simulation");
+    mainLayout->addWidget(procTable);
 
+    // --- Output Area ---
     outputArea = new QTextEdit();
     outputArea->setReadOnly(true);
-
-    ganttView = new GuiGanttView();
-    ganttView->setObjectName("GanttView"); // stylesheet hook
-
-    mainLayout->addLayout(optsLayout);
-    mainLayout->addWidget(procTable);
-    mainLayout->addWidget(startBtn);
     mainLayout->addWidget(new QLabel("Output / ASCII:"));
     mainLayout->addWidget(outputArea, 1);
+
+    // --- Gantt Chart ---
+    ganttView = new GuiGanttView();
+    ganttView->setObjectName("GanttView"); // stylesheet hook
     mainLayout->addWidget(new QLabel("Gantt:"));
     mainLayout->addWidget(ganttView, 2);
 
     setCentralWidget(central);
-    connect(startBtn, &QPushButton::clicked, this, &GuiMainWindow::startSimulation);
 }
 
-void GuiMainWindow::loadDefaultRows(int count) {
-    for (int r=0; r<count; ++r) {
-        if (!procTable->item(r,0)) procTable->setItem(r,0, new QTableWidgetItem(QString::number(r+1)));
-        if (!procTable->item(r,1)) procTable->setItem(r,1, new QTableWidgetItem(QString::number(r)));
-        if (!procTable->item(r,2)) procTable->setItem(r,2, new QTableWidgetItem(QString::number(5)));
-        if (!procTable->item(r,3)) procTable->setItem(r,3, new QTableWidgetItem(QString::number(1)));
+void GuiMainWindow::buildMenus()
+{
+    //QMenu* themeMenu = menuBar()->addMenu("Themes");
+
+    /*
+    menuBar()->setStyleSheet(
+        "QMenuBar::item { "
+        "   border: 1px solid #666666; "
+        "   padding: 4px 8px; "
+        "   border-radius: 4px; "
+        "} "
+        "QMenuBar::item:selected { "
+        "   background: #0078d7; "
+        "   color: white; "
+        "} "
+    );
+    */
+    
+
+    // --- Create the "Themes" menu ---
+    QMenu* themeMenu = menuBar()->addMenu("Themes");
+
+    /*
+    // --- Dropdown menu styling ---
+    themeMenu->setStyleSheet(
+        "QMenu { "
+        "   border: 1px solid #666666; "
+        "   border-radius: 4px; "
+        "   padding: 4px; "
+        "} "
+        "QMenu::item:selected { "
+        "   background-color: #0078d7; "
+        "   color: white; "
+        "} "
+    );
+    */
+
+    actFusion    = new QAction("Fusion (Light)", this);
+    actDarkFusion= new QAction("Dark Fusion", this);
+
+    actFusion->setCheckable(true);
+    actDarkFusion->setCheckable(true);
+
+    // not mutually exclusive in UI by default; make them radio buttons if you like
+    QActionGroup* themeGroup = new QActionGroup(this);
+    themeGroup->setExclusive(true);
+    themeGroup->addAction(actFusion);
+    themeGroup->addAction(actDarkFusion);
+
+    connect(actFusion, &QAction::triggered, [this]() {
+        setTheme(GlobalThemes::ThemeMode::Fusion);
+    });
+    connect(actDarkFusion, &QAction::triggered, [this]() {
+        setTheme(GlobalThemes::ThemeMode::DarkFusion);
+    });
+
+    themeMenu->addAction(actFusion);
+    themeMenu->addAction(actDarkFusion);
+
+    // Default theme at startup (optional)
+    actFusion->setChecked(true);
+    setTheme(GlobalThemes::ThemeMode::Fusion, /*animate*/false);
+}
+
+void GuiMainWindow::loadDefaultRows(int count)
+{
+    for (int r = 0; r < count; ++r) {
+        if (!procTable->item(r, 0)) procTable->setItem(r, 0, new QTableWidgetItem(QString::number(r+1))); // PID
+        if (!procTable->item(r, 1)) procTable->setItem(r, 1, new QTableWidgetItem(QString::number(r)));   // Arrival
+        if (!procTable->item(r, 2)) procTable->setItem(r, 2, new QTableWidgetItem(QString::number(5)));   // Burst
+        if (!procTable->item(r, 3)) procTable->setItem(r, 3, new QTableWidgetItem(QString::number(1)));   // Priority
     }
 }
 
-void GuiMainWindow::startSimulation() {
-    // Allow multiple runs: clear output + scene
+/* ---------- Simulation ---------- */
+void GuiMainWindow::startSimulation()
+{
+    // clear previous
     outputArea->clear();
     ganttView->clearScene();
 
-    // Build scheduler
-    Algorithm algo = static_cast<Algorithm>(algoBox->currentIndex());
+    // collect controls
+    Algorithm algo = static_cast<Algorithm>(algoBox->currentIndex()); // 0..3 as added
     int cores = coreBox->value();
-    int tq = quantumBox->value();
+    int tq    = quantumBox->value();
 
     Scheduler sched(cores, algo, tq);
 
-    // Read processes from table
+    // read processes from table
     const int rows = procTable->rowCount();
-    for (int i=0; i<rows; ++i) {
-        auto getCell = [&](int c)->int {
-            auto *it = procTable->item(i, c);
-            bool ok=false;
-            int v = it ? it->text().toInt(&ok) : 0;
-            return ok ? v : 0;
+    for (int i = 0; i < rows; ++i) {
+        auto readInt = [&](int col, int fallback)->int {
+            QTableWidgetItem* it = procTable->item(i, col);
+            if (!it) return fallback;
+            bool ok = false;
+            int v = it->text().toInt(&ok);
+            return ok ? v : fallback;
         };
-        int pid = getCell(0); if (pid<=0) pid = i+1;
-        int at  = getCell(1);
-        int bt  = std::max(1, getCell(2));
-        int pr  = getCell(3);
+        int pid = readInt(0, i+1);
+        int at  = readInt(1, i);
+        int bt  = std::max(1, readInt(2, 5));
+        int pr  = readInt(3, 1);
+
         sched.addProcess(Process(pid, at, bt, pr));
     }
 
+    // run + report
     sched.run();
 
-    // Text metrics + ASCII
-    QString out;
-    out += QString::fromStdString(sched.getMetrics()) + "\n";
-    out += QString::fromStdString(sched.getAsciiGantt());
-    outputArea->setText(out);
+    QString metrics = QString::fromStdString(sched.getMetrics());
+    QString ascii   = QString::fromStdString(sched.getAsciiGantt());
+    outputArea->setPlainText(metrics + "\n" + ascii);
 
-    // Animated Gantt: 60ms per time unit (adjust to taste)
-    const auto &g = sched.getGantt();
+    // draw gantt
+    const auto& g = sched.getGantt();
     int makespan = 0;
-    for (const auto &e : g) makespan = std::max(makespan, e.endTime);
+    for (const auto& e : g) makespan = std::max(makespan, e.endTime);
 
-    ganttView->drawAnimated(g, cores, makespan, /*msPerUnit*/ 60);
+    ganttView->drawAnimated(g, cores, makespan, /*msPerUnit*/60);
 }
 
-void GuiMainWindow::setLightTheme() {
-    qApp->setStyleSheet(THEME_LIGHT);
-    QSettings().setValue("ui/theme", "light");
-}
-void GuiMainWindow::setDarkTheme() {
-    qApp->setStyleSheet(THEME_DARK);
-    QSettings().setValue("ui/theme", "dark");
+/* ---------- Theme ---------- */
+void GuiMainWindow::setTheme(GlobalThemes::ThemeMode mode, bool /*animate*/)
+{
+    GlobalThemes::getTheme(mode); // applies Fusion/DarkFusion palette
+    if (actFusion && actDarkFusion) {
+        if (mode == GlobalThemes::ThemeMode::Fusion) {
+            actFusion->setChecked(true);
+        } else {
+            actDarkFusion->setChecked(true);
+        }
+    }
 }
