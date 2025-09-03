@@ -9,8 +9,8 @@ Build-Depends: debhelper (>= 11), cmake, qt6-base-dev, qt6-tools-dev, qt6-tools-
 Package-List:
  hydra-scheduler deb utils optional arch=any
 Checksums-Sha1:
- 082e8fc3a0880ef2e7a981e5861fb193ae585d04 2976747 hydra-scheduler_1.0.0-1.tar.gz
+ 8ec9d2ccdb31bf96ffca9c7efe496fed4dfc8a8f 6014700 hydra-scheduler_1.0.0-1.tar.gz
 Checksums-Sha256:
- ae54b01c90f7ba3f7eef359883ba9738862227a3755412c0d20256271ce908fa 2976747 hydra-scheduler_1.0.0-1.tar.gz
+ 35ca51f6276251babc11617ecf118906e8e9b20ef50d7990e79ea7e5cc56ebcf 6014700 hydra-scheduler_1.0.0-1.tar.gz
 Files:
- 9181f5e822bdddb6cc336e8b7da57173 2976747 hydra-scheduler_1.0.0-1.tar.gz
+ b61ac22cc73cfa6a2bb3011e8ae5d56d 6014700 hydra-scheduler_1.0.0-1.tar.gz
