@@ -15,11 +15,43 @@
 GuiMainWindow::GuiMainWindow(QWidget* parent)
     : QMainWindow(parent)
 {
+    // === Central widget and main layout ===
+    QWidget* central = new QWidget(this);
+    QVBoxLayout* mainLayout = new QVBoxLayout(central);
+    mainLayout->setContentsMargins(10, 10, 10, 10);
+    mainLayout->setSpacing(10);
+
+    // === Heading Label ===
+    QLabel* heading = new QLabel("Hydra_Scheduler", this);
+    QFont font;
+    font.setPointSize(20);  // Bigger font
+    font.setBold(true);     // Bold text
+    heading->setFont(font);
+    heading->setAlignment(Qt::AlignCenter);
+
+    // Dynamic color based on palette
+    heading->setStyleSheet(QString("color: %1; margin: 10px;")
+                               .arg(palette().color(QPalette::WindowText).name()));
+
+    mainLayout->addWidget(heading);
+
+    // === Placeholder for your main UI (tables, buttons, etc.) ===
+    // Use expanding size policy to allow resizing
+    QWidget* contentWidget = new QWidget(this);
+    contentWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    mainLayout->addWidget(contentWidget);
+
+    setCentralWidget(central);
+
+    // === Menus and other UI setup ===
     setupUi();
     buildMenus();
 
-    setMinimumSize(1200, 950);
+    // === Resizing behavior ===
+    setMinimumSize(500, 400);                      // Minimum window size
+    setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX); // No max limit
 }
+
 
 
 /* ---------- UI ---------- */

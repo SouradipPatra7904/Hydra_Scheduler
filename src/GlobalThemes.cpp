@@ -196,13 +196,13 @@ QString GlobalThemes::getTheme(ThemeMode mode)
                 width: 0; height: 0;
                 border-left: 6px solid transparent;
                 border-right: 6px solid transparent;
-                border-bottom: 8px solid #eaeaea;
+                border-bottom: 8px solid #00e599;
             }
             QSpinBox::down-arrow {
                 width: 0; height: 0;
                 border-left: 6px solid transparent;
                 border-right: 6px solid transparent;
-                border-top: 8px solid #eaeaea;
+                border-top: 8px solid #00e599;
             }
 
             /* === Scrollbars (Dark, no arrows, fixed margins) === */
