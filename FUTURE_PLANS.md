@@ -3,16 +3,16 @@
 This document outlines planned features and improvements for future releases of **Hydra Scheduler**.  
 The roadmap is not final and may evolve as the project grows, and it will grow.
 
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## ✅ Completed (v1.0)
-- Core scheduling algorithms implemented (FCFS, SJF, RR, Priority).  
+- Core scheduling algorithms implemented (First-Come-First-Serve, Shortest-Job-First, Round-Robin, Priority).  
 - Material-inspired **light & dark themes** with theme-aware tables, pushbuttons, scrollbars, and spinbox arrows.  
 - **Resizable Qt6 GUI** with polished UX.  
 - Packaged into a **.deb installer** for Debian/Ubuntu-based distributions.  
 - GitHub release with binary distribution.  
 
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 📌 Planned Features
 ### Packaging & Distribution
@@ -39,7 +39,7 @@ The roadmap is not final and may evolve as the project grows, and it will grow.
 - Tutorials and developer documentation.  
 - Contribution guidelines for open-source collaborators.  
 
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 🚀 Long-term Vision
 Hydra Scheduler aims to be a **learning and teaching tool** for operating system concepts.  
