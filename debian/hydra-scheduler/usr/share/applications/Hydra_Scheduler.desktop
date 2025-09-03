@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Hydra_Scheduler
+Comment=Process Scheduling Simulator
+Exec=Hydra_Scheduler
+Icon=Hydra_Scheduler_IMG
+Terminal=false
+Type=Application
+Categories=Utility;Education;

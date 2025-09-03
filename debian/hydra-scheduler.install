@@ -1,0 +1,6 @@
+# File: debian/hydra-installer.install
+
+build/Hydra_Scheduler usr/bin/
+resources/Hydra_Scheduler.desktop usr/share/applications/
+resources/Hydra_Scheduler_IMG.png usr/share/icons/hicolor/256x256/apps/
+

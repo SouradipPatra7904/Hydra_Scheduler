@@ -52,13 +52,13 @@ void GuiMainWindow::setupUi()
     connect(startBtn, &QPushButton::clicked, this, &GuiMainWindow::startSimulation);
 
     // Add labels for clarity
-    controlsLayout->addWidget(new QLabel("Algorithm:"));
+    controlsLayout->addWidget(new QLabel("Algorithm :"));
     controlsLayout->addWidget(algoBox);
-    controlsLayout->addWidget(new QLabel("Cores:"));
+    controlsLayout->addWidget(new QLabel("Cores :"));
     controlsLayout->addWidget(coreBox);
-    controlsLayout->addWidget(new QLabel("Quantum:"));
+    controlsLayout->addWidget(new QLabel("Quantum :"));
     controlsLayout->addWidget(quantumBox);
-    controlsLayout->addWidget(new QLabel("Processes:"));
+    controlsLayout->addWidget(new QLabel("Processes :"));
     controlsLayout->addWidget(procCountBox);
     controlsLayout->addStretch(1);
     controlsLayout->addWidget(startBtn);
@@ -132,8 +132,8 @@ void GuiMainWindow::buildMenus()
     );
     */
 
-    actFusion    = new QAction("Fusion (Light)", this);
-    actDarkFusion= new QAction("Dark Fusion", this);
+    actFusion    = new QAction("Light ⚪", this);
+    actDarkFusion= new QAction("Dark  ⚫", this);
 
     actFusion->setCheckable(true);
     actDarkFusion->setCheckable(true);

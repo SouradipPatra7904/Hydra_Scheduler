@@ -1,0 +1,33 @@
+Format: 1.8
+Date: Thu, 03 Sep 2025 21:00:00 +0530
+Source: hydra-scheduler
+Binary: hydra-scheduler
+Built-For-Profiles: noudeb
+Architecture: source amd64
+Version: 1.0.0-1
+Distribution: unstable
+Urgency: medium
+Maintainer: Souradip Patra spectralphoenix.dev@gmail.com
+Changed-By: Souradip Patra <spectralphoenix.dev@gmail.com>
+Description:
+ hydra-scheduler - Multi-core, multiple algorithms, interactive CPU resource schedul
+Changes:
+ hydra-scheduler (1.0.0-1) unstable; urgency=medium
+Checksums-Sha1:
+ 01411fcf7ebe9622e8db813021a29f0609722204 626 hydra-scheduler_1.0.0-1.dsc
+ 81a24eac4b1681816e7ad17ee055548c8a207510 1418171 hydra-scheduler_1.0.0-1.tar.gz
+ 647887d1564366908d352fe29a3e81c67aeb2f68 17432 hydra-scheduler-dbgsym_1.0.0-1_amd64.ddeb
+ 7aaa871ad3c19b84bb6bde83fca38dec460933e6 12617 hydra-scheduler_1.0.0-1_amd64.buildinfo
+ 99151b03d2ed969d9cb05c4f8f47cf255fc5c767 55608 hydra-scheduler_1.0.0-1_amd64.deb
+Checksums-Sha256:
+ 17e6e20f6c4cefa224a837bf4df807e7ef03b98bb09a26815de2413e98f528de 626 hydra-scheduler_1.0.0-1.dsc
+ ff978114eb0d915cb67686c9d6f8672096cd899d6507b8182f129061888b1ce0 1418171 hydra-scheduler_1.0.0-1.tar.gz
+ 5a4097d027a9e60ddedc8a55aa47816a72fc18ad552f34c10cd285d5ca7b29ec 17432 hydra-scheduler-dbgsym_1.0.0-1_amd64.ddeb
+ 5650d587ac141f642173613aa12a206d354829e673e496337d414dabc3fa3fe4 12617 hydra-scheduler_1.0.0-1_amd64.buildinfo
+ 29e37259a714795c2a6ff757c88aa6021594c7257ab90b94fd84a0b127d79e4c 55608 hydra-scheduler_1.0.0-1_amd64.deb
+Files:
+ 51855cee1e38a2f207a42d04f24f9a17 626 utils optional hydra-scheduler_1.0.0-1.dsc
+ 00eacde17c63265a91f30a5f4e1950a9 1418171 utils optional hydra-scheduler_1.0.0-1.tar.gz
+ 273431867f4d6fc4b18d7190709bc28a 17432 debug optional hydra-scheduler-dbgsym_1.0.0-1_amd64.ddeb
+ 5bc846b2acd8393af5df1a0042939002 12617 utils optional hydra-scheduler_1.0.0-1_amd64.buildinfo
+ fc35114dddf1f4666a0b306b5b25b605 55608 utils optional hydra-scheduler_1.0.0-1_amd64.deb

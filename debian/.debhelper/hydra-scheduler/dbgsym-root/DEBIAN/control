@@ -1,0 +1,13 @@
+Package: hydra-scheduler-dbgsym
+Package-Type: ddeb
+Source: hydra-scheduler
+Version: 1.0.0-1
+Auto-Built-Package: debug-symbols
+Architecture: amd64
+Maintainer: Souradip Patra spectralphoenix.dev@gmail.com
+Installed-Size: 124
+Depends: hydra-scheduler (= 1.0.0-1)
+Section: debug
+Priority: optional
+Description: debug symbols for hydra-scheduler
+Build-Ids: ae369d13580278c7af30a28d2bb125192f6b8d00
