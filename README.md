@@ -25,6 +25,7 @@ Introduction :
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 ★ Installation :
+
     A. Using .deb Package (Ubuntu/Debian):
         1. Download the latest hydra-scheduler_1.0.0-1_amd64.deb from the Releases page.
         2. Open a terminal in the download directory.
@@ -36,7 +37,6 @@ Introduction :
         No additional setup is required beyond installing dependencies (Qt6 libraries are included).
 
     B. For advanced users, you can also build from source using CMake:
-
         Prerequisites :
             1. C++17 compiler:
             2. Linux: g++ (build-essential) or clang
